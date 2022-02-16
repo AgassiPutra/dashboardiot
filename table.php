@@ -47,20 +47,20 @@
                 <nav class="navbar-sidebar2">
                     <ul class="list-unstyled navbar__list">
                         <li>
-                            <a class="js-arrow" href="index2.html">
+                            <a class="js-arrow" href="index.php">
                                 <i class="fas fa-tachometer-alt"></i>Dashboard
                             </a>
                         </li>
                         <li>
-                            <a href="table.html">
+                            <a href="table.php">
                                 <i class="fas fa-chart-bar"></i>Tabel Devices</a>
                         </li>
                         <li>
-                            <a href="user-detail.html">
+                            <a href="user-detail.php">
                                 <i class="fas fa-user"></i>User</a>
                         </li>
                         <li>
-                            <a href="servo-log.html">
+                            <a href="servo-log.php">
                                 <i class="fas fa-history"></i>Servo Log</a>
                         </li>
                     </ul>

@@ -1,12 +1,7 @@
 <?php
 include 'koneksi/koneksi.php';
 session_start();
- 
-if (!isset($_SESSION['username'])) {
-    header("Location: index2.php");
-}
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -22,16 +17,6 @@ if (!isset($_SESSION['username'])) {
 
     <!-- Bootstrap CSS-->
     <link href="vendor/bootstrap-4.1/bootstrap.min.css" rel="stylesheet" media="all">
-
-    <!-- Vendor CSS-->
-    <link href="vendor/animsition/animsition.min.css" rel="stylesheet" media="all">
-    <link href="vendor/bootstrap-progressbar/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet" media="all">
-    <link href="vendor/wow/animate.css" rel="stylesheet" media="all">
-    <link href="vendor/css-hamburgers/hamburgers.min.css" rel="stylesheet" media="all">
-    <link href="vendor/slick/slick.css" rel="stylesheet" media="all">
-    <link href="vendor/select2/select2.min.css" rel="stylesheet" media="all">
-    <link href="vendor/perfect-scrollbar/perfect-scrollbar.css" rel="stylesheet" media="all">
-    <link href="vendor/vector-map/jqvmap.min.css" rel="stylesheet" media="all">
 
     <!-- Main CSS-->
     <link href="css/theme.css" rel="stylesheet" media="all">
@@ -54,16 +39,20 @@ if (!isset($_SESSION['username'])) {
                             </a>
                         </li>
                         <li>
-                            <a href="table.html">
+                            <a href="table.php">
                                 <i class="fas fa-chart-bar"></i>Tabel Devices</a>
                         </li>
                         <li>
-                            <a href="user-detail.html">
+                            <a href="user-detail.php">
                                 <i class="fas fa-user"></i>User</a>
                         </li>
                         <li>
-                            <a href="servo-log.html">
+                            <a href="servo-log.php">
                                 <i class="fas fa-history"></i>Servo Log</a>
+                        </li>
+                        <li>
+                            <a href="logout.php">
+                            <i class="fas fa-sign-out-alt"></i>Logout</a>
                         </li>
                     </ul>
                 </nav>
@@ -121,7 +110,7 @@ if (!isset($_SESSION['username'])) {
                             <div class="col-md-6 col-lg-3">
                                 <div class="statistic__item">
                                     <h2 class="number">10,368</h2>
-                                    <span class="desc">members online</span>
+                                    <span class="desc"><?php echo $_SESSION['username']; ?></span>
                                     <div class="icon">
                                         <i class="zmdi zmdi-account-o"></i>
                                     </div>
