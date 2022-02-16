@@ -23,12 +23,6 @@ session_start();
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
-
-  <!-- Preloader -->
-  <div class="preloader flex-column justify-content-center align-items-center">
-    <img class="animation__shake" src="dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
-  </div>
-
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
@@ -62,17 +56,17 @@ session_start();
               </p>
             </a>
           </li>
-          <li class="nav-item menu-open">
-            <a href="devicelist.php" class="nav-link active">
+          <li class="nav-item">
+            <a href="devicelist.php" class="nav-link">
               <i class="nav-icon fas fa-table"></i>
               <p>
                 Data Devices
               </p>
             </a>
           </li>
-          <li class="nav-item">
-            <a href="datauser.php" class="nav-link">
-              <i class="nav-icon fas fa-table"></i>
+          <li class="nav-item menu-open">
+            <a href="datauser.php" class="nav-link active">
+              <i class="nav-icon fas fa-user"></i>
               <p>
                 User
               </p>
@@ -119,32 +113,87 @@ session_start();
                 <thead>
                   <tr>
                     <th scope="col">No</th>
-                    <th scope="col">ID Devices</th>
-                    <th scope="col">Nama Devices</th>
+                    <th scope="col">Nama User</th>
+                    <th scope="col">Email</th>
                     <th scope="col">Action</th>
                   </tr>
                 </thead>
                 <tbody>
+                <?php
+                    $batas = 5;
+                    if(!isset($_GET['halaman'])){
+                      $posisi = 0;
+                      $halaman = 1;
+                    }else{
+                      $halaman = $_GET['halaman'];
+                      $posisi = ($halaman-1) * $batas;
+                    }
+                      $sql_k = "SELECT `id`,`username`,`email` FROM `user`";
+                      if (!empty($katakunci_kategori)){
+                        $sql_k .= " where `email` LIKE '%$katakunci_kategori%' ";
+                      }
+                      $sql_k .= " ORDER BY `id` limit $posisi, $batas ";
+                      $query_k = mysqli_query($conn,$sql_k);
+                      $no = $posisi+1;
+                      while($data_k = mysqli_fetch_row($query_k)){
+                      $id = $data_k[0];
+                      $username = $data_k[1];
+                      $email = $data_k[2];
+                    ?>
                   <tr>
-                    <th scope="row">1</th>
-                    <td>OAO19</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
+                    <td><?php echo $no;?></td>
+                    <td><?php echo $username?></td>
+                    <td><?php echo $email?></td>
+                    <td>
+                      <a href="edit.php?id=$user_data[id]" class="btn btn-xs btn-info" title="Edit"><i class="fas fa-edit"></i></a>
+                      <a href="detail-user-data-<?php echo $id;?>" class="btn btn-xs btn-info" title="Detail"><i class="fas fa-eye"></i></a>
+                      <a href="javascript:if(confirm('Anda yakin ingin menghapus data<?php echo $id; ?>?'))window.location.href ='delete.php?id=$user_data[id]'"class="btn btn-xs btn-warning"><i class="fas fa-trash"></i>                      
+                     </td>
                   </tr>
-                  <tr>
-                    <th scope="row">2</th>
-                    <td>Motor Servo</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>Hapus</td>
-                    <td>the Bird</td>
-                    <td>@twitter</td>
-                  </tr>
+                  <?php $no++;}?>
                 </tbody>
               </table>
+              </div>
+              <?php
+              //hitung jumlah semua data
+              $sql_jum = "SELECT `id`,`username`,`email` FROM `user`";
+              if (!empty($katakunci_kategori)){
+                $sql_jum .= " where `username` LIKE '%$katakunci_kategori%'";
+              }
+              $sql_jum .= " order by `id`";
+              $query_jum = mysqli_query($conn,$sql_jum);
+              $jum_data = mysqli_num_rows($query_jum);
+              $jum_halaman = ceil($jum_data/$batas);
+              ?>
+              <div class="card-footer clearfix">
+                <ul class="pagination pagination-sm m-0 float-right">
+                    <?php
+                    if($jum_halaman==0){
+                    //tidak ada halaman
+                    }else if($jum_halaman==1){
+                    echo "<li class='page-item'><a class='page-link'>1</a></li>";
+                    }else{
+                    $sebelum = $halaman-1;
+                    $setelah = $halaman+1;
+                    if($halaman!=1){
+                    echo "<li class='page-item'><a class='page-link' href='?halaman=1'>First</a></li>";
+                    echo "<li class='page-item'><a class='page-link' href='?halaman-$sebelum'>«</a></li>";
+                    }
+                    for($i=1; $i<=$jum_halaman; $i++){
+                    if ($i > $halaman - 5 and $i < $halaman + 5 ) {
+                    if($i!=$halaman){
+                    echo "<li class='page-item'><a class='page-link' href='?halaman=$i'>$i</a></li>";
+                    }else{
+                    echo "<li class='page-item'><a class='page-link'>$i</a></li>";
+                    }
+                    }
+                    }
+                    if($halaman!=$jum_halaman){
+                    echo "<li class='page-item'><a class='page-link' href='?halaman=$setelah'>»</a></li>";
+                    echo "<li class='page-item'><a class='page-link' href='?halaman=$jum_halaman'>Last</a></li>";
+                    }
+                    }?>
+                  </ul>
               </div>
               <!-- /.card-body -->
             </div>
