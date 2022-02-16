@@ -1,3 +1,32 @@
+<?php 
+ 
+include 'koneksi/koneksi.php';
+ 
+error_reporting(0);
+ 
+session_start();
+ 
+if (isset($_SESSION['username'])) {
+    header("Location: index2.php");
+}
+ 
+if (isset($_POST['submit'])) {
+    $email = $_POST['email'];
+    $password = md5($_POST['password']);
+ 
+    $sql = "SELECT * FROM user WHERE email='$email' AND password='$password'";
+    $result = mysqli_query($conn, $sql);
+    if ($result->num_rows > 0) {
+        $row = mysqli_fetch_assoc($result);
+        $_SESSION['username'] = $row['username'];
+        header("Location: index2.php");
+    } else {
+        echo "<script>alert('Email atau password Anda salah. Silahkan coba lagi!')</script>";
+    }
+}
+ 
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -49,7 +78,7 @@
                         <div class="login-form">
                             <form action="" method="post">
                                 <div class="form-group">
-                                    <label>Email Address</label>
+                                    <label>Email</label>
                                     <input class="au-input au-input--full" type="email" name="email" placeholder="Email">
                                 </div>
                                 <div class="form-group">
@@ -61,7 +90,7 @@
                             <div class="register-link">
                                 <p>
                                     Belum punya akun?
-                                    <a href="register.html">Silahkan Daftar</a>
+                                    <a href="register.php">Silahkan Daftar</a>
                                 </p>
                             </div>
                         </div>

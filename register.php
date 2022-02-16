@@ -1,22 +1,39 @@
-<?php
-
-require_once("koneksi/koneksi.php");
-
-if(isset($_POST['register'])){
-
-    $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING);
-    $password = password_hash($_POST["password"], PASSWORD_DEFAULT);
-    $sql = "INSERT INTO users (username,password) 
-            VALUES (:username, :password)";
-    $stmt = $db->prepare($sql);
-    $params = array(
-        ":username" => $username,
-        ":password" => $password,
-    );
-    $saved = $stmt->execute($params);
-    if($saved) header("Location: login.php");
+<?php 
+ 
+include 'koneksi/koneksi.php';
+ 
+error_reporting(0);
+ 
+session_start();
+ 
+if (isset($_SESSION['username'])) {
+    header("Location: index2.php");
 }
-
+ 
+if (isset($_POST['submit'])) {
+    $username = $_POST['username'];
+    $email = $_POST['email'];
+    $password = md5($_POST['password']);
+ 
+        $sql = "SELECT * FROM user WHERE email='$email'";
+        $result = mysqli_query($conn, $sql);
+        if (!$result->num_rows > 0) {
+            $sql = "INSERT INTO user (username, email, password)
+                    VALUES ('$username', '$email', '$password')";
+            $result = mysqli_query($conn, $sql);
+            if ($result) {
+                echo "<script>alert('Selamat, registrasi berhasil!')</script>";
+                $username = "";
+                $email = "";
+                $_POST['password'] = "";
+            } else {
+                echo "<script>alert('Woops! Terjadi kesalahan.')</script>";
+            }
+        } else {
+            echo "<script>alert('Woops! Email Sudah Terdaftar.')</script>";
+        }
+}
+ 
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -73,15 +90,19 @@ if(isset($_POST['register'])){
                                     <input class="au-input au-input--full" type="text" name="username" placeholder="Username">
                                 </div>
                                 <div class="form-group">
+                                    <label>Email</label>
+                                    <input class="au-input au-input--full" type="text" name="email" placeholder="Email">
+                                </div>
+                                <div class="form-group">
                                     <label>Password</label>
                                     <input class="au-input au-input--full" type="password" name="password" placeholder="Password">
                                 </div>
-                                <button class="au-btn au-btn--block au-btn--green m-b-20" type="submit" name="register">register</button>
+                                <button class="au-btn au-btn--block au-btn--green m-b-20" type="submit" name="submit">register</button>
                             </form>
                             <div class="register-link">
                                 <p>
                                     Sudah punya akun?
-                                    <a href="#">Login Disini</a>
+                                    <a href="login.php">Login Disini</a>
                                 </p>
                             </div>
                         </div>

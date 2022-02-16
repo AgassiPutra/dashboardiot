@@ -1,3 +1,12 @@
+<?php
+include 'koneksi/koneksi.php';
+session_start();
+ 
+if (!isset($_SESSION['username'])) {
+    header("Location: index2.php");
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 

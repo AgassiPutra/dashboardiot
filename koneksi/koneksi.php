@@ -1,7 +1,14 @@
-<?php
-$koneksi = mysqli_connect("localhost","root","","pet_feeder");
-// cek koneksi
-if (!$koneksi){
-    die("Error koneksi: " . mysqli_connect_errno());
+<?php 
+ 
+$server = "localhost";
+$user = "root";
+$pass = "";
+$database = "pet_feeder";
+ 
+$conn = mysqli_connect($server, $user, $pass, $database);
+ 
+if (!$conn) {
+    die("<script>alert('Gagal tersambung dengan database.')</script>");
 }
+ 
 ?>
