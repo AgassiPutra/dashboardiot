@@ -1,8 +1,24 @@
-<?php 
-include 'koneksi/koneksi.php';
+<?php
+include "koneksi/koneksi.php";
 session_start();
+  if((isset($_GET['aksi']))&&(isset($_GET['data']))){
+    if($_GET['aksi']=='hapus'){
+    $id_user = $_GET['data'];
+    //hapus kategori buku
+    $sql_dh = "delete from `devices` where `id` = '$id'";
+    mysqli_query($conn,$sql_dh);
+    }
+  }
+  if(isset($_POST["katakunci"])){
+    $katakunci_kategori = $_POST["katakunci"];
+    $_SESSION['katakunci_kategori'] = $katakunci_kategori;
+  }
+  if(isset($_SESSION['katakunci_kategori'])){
+    $katakunci_kategori = $_SESSION['katakunci_kategori'];
+  }else{
+    unset($_SESSION['katakunci_kategori']);
+  }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -23,12 +39,6 @@ session_start();
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
-
-  <!-- Preloader -->
-  <div class="preloader flex-column justify-content-center align-items-center">
-    <img class="animation__shake" src="dist/img/AdminLTELogo.png" alt="AdminLTELogo" height="60" width="60">
-  </div>
-
   <!-- Main Sidebar Container -->
   <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
@@ -79,7 +89,7 @@ session_start();
             </a>
           </li>
           <li class="nav-item">
-            <a href="#" class="nav-link">
+            <a href="logsensor.php" class="nav-link">
               <i class="nav-icon fas fa-history"></i>
               <p>
                 Log
@@ -126,8 +136,11 @@ session_start();
         <div class="row">
           <div class="col-12">
             <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">Daftar Devices</h3>
+            <div class="card-header">
+                <h3 class="card-title" style="margin-top:5px;">Data Devices</h3>
+                <div class="card-tools">
+                  <a href="createdevice.php" class="btn btn-sm btn-info float-right"><i class="fas fa-plus"></i> Tambah Device</a>
+                </div>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
@@ -135,32 +148,87 @@ session_start();
                 <thead>
                   <tr>
                     <th scope="col">No</th>
-                    <th scope="col">ID Devices</th>
+                    <th scope="col">Seri Device</th>
                     <th scope="col">Nama Devices</th>
                     <th scope="col">Action</th>
                   </tr>
                 </thead>
                 <tbody>
+                <?php
+                    $batas = 5;
+                    if(!isset($_GET['halaman'])){
+                      $posisi = 0;
+                      $halaman = 1;
+                    }else{
+                      $halaman = $_GET['halaman'];
+                      $posisi = ($halaman-1) * $batas;
+                    }
+                      $sql_k = "SELECT `id`,`seri_devices`,`nama_devices` FROM `devices`";
+                      if (!empty($katakunci_kategori)){
+                        $sql_k .= " where `nama_devices` LIKE '%$katakunci_kategori%' ";
+                      }
+                      $sql_k .= " ORDER BY `id` limit $posisi, $batas ";
+                      $query_k = mysqli_query($conn,$sql_k);
+                      $no = $posisi+1;
+                      while($data_k = mysqli_fetch_row($query_k)){
+                      $id = $data_k[0];
+                      $seri_devices = $data_k[1];
+                      $nama_devices = $data_k[2];
+                    ?>
                   <tr>
-                    <th scope="row">1</th>
-                    <td>OAO19</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
+                    <td><?php echo $no;?></td>
+                    <td><?php echo $seri_devices?></td>
+                    <td><?php echo $nama_devices?></td>
+                    <td>
+                      <a href="editdevice.php?id=<?php echo $id;?>" class="btn btn-xs btn-info" title="Edit"><i class="fas fa-edit"></i></a>
+                      <a href="read_device.php?id=<?php echo $id;?>" class="btn btn-xs btn-info" title="Detail"><i class="fas fa-eye"></i></a>
+                      <a href="hapusdevice.php?id=<?php echo $id; ?>"class="btn btn-xs btn-warning"><i class="fas fa-trash"></i></a>                     
+                     </td>
                   </tr>
-                  <tr>
-                    <th scope="row">2</th>
-                    <td>Motor Servo</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                  </tr>
-                  <tr>
-                    <th scope="row">3</th>
-                    <td>Hapus</td>
-                    <td>the Bird</td>
-                    <td>@twitter</td>
-                  </tr>
+                  <?php $no++;}?>
                 </tbody>
               </table>
+              </div>
+              <?php
+              //hitung jumlah semua data
+              $sql_jum = "SELECT `id`,`seri_devices`,`nama_devices` FROM `devices`";
+              if (!empty($katakunci_kategori)){
+                $sql_jum .= " where `nama_devices` LIKE '%$katakunci_kategori%'";
+              }
+              $sql_jum .= " order by `id`";
+              $query_jum = mysqli_query($conn,$sql_jum);
+              $jum_data = mysqli_num_rows($query_jum);
+              $jum_halaman = ceil($jum_data/$batas);
+              ?>
+              <div class="card-footer clearfix">
+                <ul class="pagination pagination-sm m-0 float-right">
+                    <?php
+                    if($jum_halaman==0){
+                    //tidak ada halaman
+                    }else if($jum_halaman==1){
+                    echo "<li class='page-item'><a class='page-link'>1</a></li>";
+                    }else{
+                    $sebelum = $halaman-1;
+                    $setelah = $halaman+1;
+                    if($halaman!=1){
+                    echo "<li class='page-item'><a class='page-link' href='?halaman=1'>First</a></li>";
+                    echo "<li class='page-item'><a class='page-link' href='?halaman-$sebelum'>«</a></li>";
+                    }
+                    for($i=1; $i<=$jum_halaman; $i++){
+                    if ($i > $halaman - 5 and $i < $halaman + 5 ) {
+                    if($i!=$halaman){
+                    echo "<li class='page-item'><a class='page-link' href='?halaman=$i'>$i</a></li>";
+                    }else{
+                    echo "<li class='page-item'><a class='page-link'>$i</a></li>";
+                    }
+                    }
+                    }
+                    if($halaman!=$jum_halaman){
+                    echo "<li class='page-item'><a class='page-link' href='?halaman=$setelah'>»</a></li>";
+                    echo "<li class='page-item'><a class='page-link' href='?halaman=$jum_halaman'>Last</a></li>";
+                    }
+                    }?>
+                  </ul>
               </div>
               <!-- /.card-body -->
             </div>
