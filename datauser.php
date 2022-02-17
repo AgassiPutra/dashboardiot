@@ -1,8 +1,24 @@
-<?php 
-include 'koneksi/koneksi.php';
+<?php
+include "koneksi/koneksi.php";
 session_start();
+  if((isset($_GET['aksi']))&&(isset($_GET['data']))){
+    if($_GET['aksi']=='hapus'){
+    $id_user = $_GET['data'];
+    //hapus kategori buku
+    $sql_dh = "delete from `user` where `id` = '$id'";
+    mysqli_query($conn,$sql_dh);
+    }
+  }
+  if(isset($_POST["katakunci"])){
+    $katakunci_kategori = $_POST["katakunci"];
+    $_SESSION['katakunci_kategori'] = $katakunci_kategori;
+  }
+  if(isset($_SESSION['katakunci_kategori'])){
+    $katakunci_kategori = $_SESSION['katakunci_kategori'];
+  }else{
+    unset($_SESSION['katakunci_kategori']);
+  }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -72,6 +88,22 @@ session_start();
               </p>
             </a>
           </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-history"></i>
+              <p>
+                Log
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="logout.php" class="nav-link">
+              <i class="fas fa-sign-out-alt"></i>
+              <p>
+                Logout
+              </p>
+            </a>
+          </li>
         </ul>
       </nav>
       <!-- /.sidebar-menu -->
@@ -104,8 +136,11 @@ session_start();
         <div class="row">
           <div class="col-12">
             <div class="card">
-              <div class="card-header">
-                <h3 class="card-title">Daftar Devices</h3>
+            <div class="card-header">
+                <h3 class="card-title" style="margin-top:5px;">Data User</h3>
+                <div class="card-tools">
+                  <a href="createuser.php" class="btn btn-sm btn-info float-right"><i class="fas fa-plus"></i> Tambah User</a>
+                </div>
               </div>
               <!-- /.card-header -->
               <div class="card-body">
@@ -145,9 +180,9 @@ session_start();
                     <td><?php echo $username?></td>
                     <td><?php echo $email?></td>
                     <td>
-                      <a href="edit.php?id=$user_data[id]" class="btn btn-xs btn-info" title="Edit"><i class="fas fa-edit"></i></a>
-                      <a href="detail-user-data-<?php echo $id;?>" class="btn btn-xs btn-info" title="Detail"><i class="fas fa-eye"></i></a>
-                      <a href="javascript:if(confirm('Anda yakin ingin menghapus data<?php echo $id; ?>?'))window.location.href ='delete.php?id=$user_data[id]'"class="btn btn-xs btn-warning"><i class="fas fa-trash"></i>                      
+                      <a href="edituser.php?id=<?php echo $id;?>" class="btn btn-xs btn-info" title="Edit"><i class="fas fa-edit"></i></a>
+                      <a href="read_user.php?id=<?php echo $id;?>" class="btn btn-xs btn-info" title="Detail"><i class="fas fa-eye"></i></a>
+                      <a href="hapususer.php?id=<?php echo $id; ?>"class="btn btn-xs btn-warning"><i class="fas fa-trash"></i></a>                     
                      </td>
                   </tr>
                   <?php $no++;}?>

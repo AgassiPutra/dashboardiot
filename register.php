@@ -35,7 +35,8 @@ if (isset($_POST['submit'])) {
         }
 }
  
-?><!doctype html>
+?>
+<!doctype html>
 <html lang="en">
   <head>
   	<title>Pet Feeder Register</title>

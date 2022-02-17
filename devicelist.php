@@ -72,9 +72,25 @@ session_start();
           </li>
           <li class="nav-item">
             <a href="datauser.php" class="nav-link">
-              <i class="nav-icon fas fa-table"></i>
+              <i class="nav-icon fas fa-user"></i>
               <p>
                 User
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#" class="nav-link">
+              <i class="nav-icon fas fa-history"></i>
+              <p>
+                Log
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="logout.php" class="nav-link">
+              <i class="fas fa-sign-out-alt"></i>
+              <p>
+                Logout
               </p>
             </a>
           </li>
