@@ -18,7 +18,7 @@ if (isset($_POST['submit'])) {
                 $username = "";
                 $email = "";
                 $_POST['password'] = "";
-                header("Location:datauser.php");
+                header("Location:datauser.php?notif=tambahberhasil");
             } else {
                 echo "<script>alert('Woops! Terjadi kesalahan.')</script>";
             }

@@ -16,7 +16,7 @@ if (isset($_POST['submit'])) {
                 echo "<script>alert('Selamat, Tambah Data Berhasil!')</script>";
                 $seri_devices = "";
                 $nama_devices = "";
-                header("Location:devicelist.php");
+                header("Location:devicelist.php?notif=tambahberhasil");
             } else {
                 echo "<script>alert('Woops! Terjadi kesalahan.')</script>";
             }

@@ -143,6 +143,20 @@ session_start();
                 </div>
               </div>
               <!-- /.card-header -->
+              <div class="col-sm-12">
+                  <?php if(!empty($_GET['notif'])){?>
+                  <?php if($_GET['notif']=="tambahberhasil"){?>
+                  <div class="alert alert-success" role="alert">
+                  Data Berhasil Ditambahkan</div>
+                  <?php } else if($_GET['notif']=="editberhasil"){?>
+                  <div class="alert alert-success" role="alert">
+                  Data Berhasil Diubah</div>
+                  <?php } else if($_GET['notif']=="hapusberhasil"){?>
+                  <div class="alert alert-success" role="alert">
+                  Data Berhasil Dihapus</div>
+                  <?php }?>
+                  <?php }?>
+              </div>
               <div class="card-body">
               <table class="table">
                 <thead>
