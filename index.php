@@ -8,21 +8,6 @@ $servo = $data['servo'];
 
 $sql2 =  mysqli_query($conn,"SELECT * FROM sensor_suhu ORDER BY id DESC LIMIT 1");
 $suhu = mysqli_fetch_array($sql2);
-
-$sql3 = "SELECT id, temperatur, humidity, tanggal FROM sensor_suhu order by id desc limit 100";
-
-$result = $conn->query($sql3);
-
-while ($data = $result->fetch_assoc()){
-    $sensor_data[] = $data;
-}
-
-$tanggal = array_column($sensor_data, 'tanggal');
-$temperature = json_encode(array_reverse(array_column($sensor_data, 'temperatur')), JSON_NUMERIC_CHECK);
-$humidity = json_encode(array_reverse(array_column($sensor_data, 'humidity')), JSON_NUMERIC_CHECK);
-$tanggal = json_encode(array_reverse($tanggal), JSON_NUMERIC_CHECK);
-
-$result->free();
 ?>
 
 <!DOCTYPE html>
@@ -47,57 +32,6 @@ $result->free();
       xmlhttp.send();
     }
   </script>
-  <script>
-  var temperature = <?php echo $temperature; ?>;
-  var humidity = <?php echo $humidity; ?>;
-  var tanggal = <?php echo $tanggal; ?>;
-
-  var chartT = new Highcharts.Chart({
-    chart:{ renderTo : 'chart-temperature' },
-    title: { text: 'DHT11 Temperature' },
-    series: [{
-      showInLegend: false,
-      data: temperature
-    }],
-    plotOptions: {
-      line: { animation: false,
-        dataLabels: { enabled: true }
-      },
-      series: { color: '#059e8a' }
-    },
-    xAxis: { 
-      type: 'datetime',
-      categories: tanggal
-    },
-    yAxis: {
-      title: { text: 'Temperature (Celsius)' }
-    },
-    credits: { enabled: false }
-  });
-
-  var chartH = new Highcharts.Chart({
-    chart:{ renderTo:'chart-humidity' },
-    title: { text: 'DHT11 Humidity' },
-    series: [{
-      showInLegend: false,
-      data: humidity
-    }],
-    plotOptions: {
-      line: { animation: false,
-        dataLabels: { enabled: true }
-      }
-    },
-    xAxis: {
-      type: 'datetime',
-      categories: tanggal
-    },
-    yAxis: {
-      title: { text: 'Humidity (%)' }
-    },
-    credits: { enabled: false }
-  });
-  </script>
-
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
   <!-- Font Awesome -->
