@@ -1,6 +1,28 @@
 <?php 
 include 'koneksi/koneksi.php';
 session_start();
+
+$sql =  mysqli_query($conn,"SELECT * FROM tb_servo");
+$data = mysqli_fetch_array($sql);
+$servo = $data['servo'];
+
+$sql2 =  mysqli_query($conn,"SELECT * FROM sensor_suhu ORDER BY id DESC LIMIT 1");
+$suhu = mysqli_fetch_array($sql2);
+
+$sql3 = "SELECT id, temperatur, humidity, tanggal FROM sensor_suhu order by id desc limit 100";
+
+$result = $conn->query($sql3);
+
+while ($data = $result->fetch_assoc()){
+    $sensor_data[] = $data;
+}
+
+$tanggal = array_column($sensor_data, 'tanggal');
+$temperature = json_encode(array_reverse(array_column($sensor_data, 'temperatur')), JSON_NUMERIC_CHECK);
+$humidity = json_encode(array_reverse(array_column($sensor_data, 'humidity')), JSON_NUMERIC_CHECK);
+$tanggal = json_encode(array_reverse($tanggal), JSON_NUMERIC_CHECK);
+
+$result->free();
 ?>
 
 <!DOCTYPE html>
@@ -8,7 +30,73 @@ session_start();
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- <meta http-equiv="refresh" content="10;url=index.php"> -->
   <title>Dashboard Pet Feeder</title>
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script type="text/javascript">
+    function ubahposisi(value){
+      document.getElementById('posisi').innerHTML = value;
+      var xmlhttp = new XMLHttpRequest();
+
+      xmlhttp.onreadystatechange = function(){
+        if(xmlhttp.readyState == 4 && xmlhttp.status == 200){
+          document.getElementById('posisi').innerHTML = xmlhttp.responseText;
+        }
+      }
+      xmlhttp.open("GET", "servo.php?pos=" + value, true);
+      xmlhttp.send();
+    }
+  </script>
+  <script>
+  var temperature = <?php echo $temperature; ?>;
+  var humidity = <?php echo $humidity; ?>;
+  var tanggal = <?php echo $tanggal; ?>;
+
+  var chartT = new Highcharts.Chart({
+    chart:{ renderTo : 'chart-temperature' },
+    title: { text: 'DHT11 Temperature' },
+    series: [{
+      showInLegend: false,
+      data: temperature
+    }],
+    plotOptions: {
+      line: { animation: false,
+        dataLabels: { enabled: true }
+      },
+      series: { color: '#059e8a' }
+    },
+    xAxis: { 
+      type: 'datetime',
+      categories: tanggal
+    },
+    yAxis: {
+      title: { text: 'Temperature (Celsius)' }
+    },
+    credits: { enabled: false }
+  });
+
+  var chartH = new Highcharts.Chart({
+    chart:{ renderTo:'chart-humidity' },
+    title: { text: 'DHT11 Humidity' },
+    series: [{
+      showInLegend: false,
+      data: humidity
+    }],
+    plotOptions: {
+      line: { animation: false,
+        dataLabels: { enabled: true }
+      }
+    },
+    xAxis: {
+      type: 'datetime',
+      categories: tanggal
+    },
+    yAxis: {
+      title: { text: 'Humidity (%)' }
+    },
+    credits: { enabled: false }
+  });
+  </script>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -155,12 +243,13 @@ session_start();
               <div class="inner">
                 <h3><i class="fas fa-power-off"></i></h3>
 
-                <p>Servo Button</p>
+                <p>Servo Controll</p>
               </div>
               <div class="icon">
               <i class="fas fa-power-off"></i>
               </div>
-              <a href="#" class="small-box-footer">On / Off <i class="fas fa-arrow-circle-right"></i></a>
+              <div class="row pl-3"><label>Posisi Servo&nbsp;</label><span id="posisi"> &nbsp;<?php echo $servo;?></span></div>
+              <div class="d-flex justify-content-center pb-2"><input type="range" id="customRange1" step="1" min="0" max="180" class="slider" id="servoSlider" value="<?php echo $servo;?>" onchange="ubahposisi(this.value)"></div>
             </div>
           </div>
           <!-- ./col -->
@@ -168,14 +257,12 @@ session_start();
             <!-- small box -->
             <div class="small-box bg-success">
               <div class="inner">
-                <h3><i class="fas fa-thermometer-three-quarters"></i></h3>
-
+                <div class="row pl-2"><h3><i class="fas fa-thermometer-three-quarters"></i></h3><span class="pl-2 pt-2"><?php echo $suhu['1'];?>&deg;C</span></div>
                 <p>Temperature</p>
               </div>
               <div class="icon">
-                <i class="ion ion-stats-bars"></i>
+              <i class="fas fa-thermometer-three-quarters"></i>
               </div>
-              <a href="#" class="small-box-footer">Monitor <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
           <!-- ./col -->
@@ -183,142 +270,18 @@ session_start();
             <!-- small box -->
             <div class="small-box bg-warning">
               <div class="inner">
-                <h3>44</h3>
-
-                <p>User Registrations</p>
+              <div class="row pl-2"><h3><i class="fas fa-tint"></i></h3><span class="pl-2 pt-2"><?php echo $suhu['2'];?>%</span></div>
+                <p>Humidity</p>
               </div>
               <div class="icon">
-                <i class="ion ion-person-add"></i>
+              <i class="fas fa-tint"></i>
               </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
             </div>
           </div>
-          <!-- ./col -->
-          <div class="col-lg-3 col-6">
-            <!-- small box -->
-            <div class="small-box bg-danger">
-              <div class="inner">
-                <h3>65</h3>
-
-                <p>Unique Visitors</p>
-              </div>
-              <div class="icon">
-                <i class="ion ion-pie-graph"></i>
-              </div>
-              <a href="#" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
-            </div>
-          </div>
-          <!-- ./col -->
         </div>
-        <!-- /.row -->
-        <!-- Main row -->
-        <div class="row">
-          <!-- Left col -->
-          <section class="col-lg-7 connectedSortable">
-            <!-- Custom tabs (Charts with tabs)-->
-            <div class="card">
-              <div class="card-body">
-                <div class="tab-content p-0">
-                  <!-- Morris chart - Sales -->
-                  <div class="chart tab-pane active" id="revenue-chart"
-                       style="position: relative; height: 300px;">
-                      <canvas id="revenue-chart-canvas" height="300" style="height: 300px;"></canvas>
-                   </div>
-                  <div class="chart tab-pane" id="sales-chart" style="position: relative; height: 300px;">
-                    <canvas id="sales-chart-canvas" height="300" style="height: 300px;"></canvas>
-                  </div>
-                </div>
-              </div><!-- /.card-body -->
-            </div>
-            <!-- /.card -->
-          </section>
-          <!-- /.Left col -->
-          <!-- right col (We are only adding the ID to make the widgets sortable)-->
-          <section class="col-lg-5 connectedSortable">
-
-            <!-- Map card -->
-            <div class="card bg-gradient-primary">
-              <div class="card-body">
-                <div id="world-map" style="height: 250px; width: 100%;"></div>
-              </div>
-              <!-- /.card-body-->
-              <div class="card-footer bg-transparent">
-                <div class="row">
-                  <div class="col-4 text-center">
-                    <div id="sparkline-1"></div>
-                    <div class="text-white">Visitors</div>
-                  </div>
-                  <!-- ./col -->
-                  <div class="col-4 text-center">
-                    <div id="sparkline-2"></div>
-                    <div class="text-white">Online</div>
-                  </div>
-                  <!-- ./col -->
-                  <div class="col-4 text-center">
-                    <div id="sparkline-3"></div>
-                    <div class="text-white">Sales</div>
-                  </div>
-                  <!-- ./col -->
-                </div>
-                <!-- /.row -->
-              </div>
-            </div>
-            <!-- /.card -->
-
-            <!-- solid sales graph -->
-            <div class="card bg-gradient-info">
-              <div class="card-header border-0">
-                <h3 class="card-title">
-                  <i class="fas fa-th mr-1"></i>
-                  Sales Graph
-                </h3>
-
-                <div class="card-tools">
-                  <button type="button" class="btn bg-info btn-sm" data-card-widget="collapse">
-                    <i class="fas fa-minus"></i>
-                  </button>
-                  <button type="button" class="btn bg-info btn-sm" data-card-widget="remove">
-                    <i class="fas fa-times"></i>
-                  </button>
-                </div>
-              </div>
-              <div class="card-body">
-                <canvas class="chart" id="line-chart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%;"></canvas>
-              </div>
-              <!-- /.card-body -->
-              <div class="card-footer bg-transparent">
-                <div class="row">
-                  <div class="col-4 text-center">
-                    <input type="text" class="knob" data-readonly="true" value="20" data-width="60" data-height="60"
-                           data-fgColor="#39CCCC">
-
-                    <div class="text-white">Mail-Orders</div>
-                  </div>
-                  <!-- ./col -->
-                  <div class="col-4 text-center">
-                    <input type="text" class="knob" data-readonly="true" value="50" data-width="60" data-height="60"
-                           data-fgColor="#39CCCC">
-
-                    <div class="text-white">Online</div>
-                  </div>
-                  <!-- ./col -->
-                  <div class="col-4 text-center">
-                    <input type="text" class="knob" data-readonly="true" value="30" data-width="60" data-height="60"
-                           data-fgColor="#39CCCC">
-
-                    <div class="text-white">In-Store</div>
-                  </div>
-                  <!-- ./col -->
-                </div>
-                <!-- /.row -->
-              </div>
-              <!-- /.card-footer -->
-            </div>
-            <!-- /.card -->
-          </section>
-          <!-- right col -->
-        </div>
-        <!-- /.row (main row) -->
+        <?php
+        include 'esp_chart.php';
+        ?>
       </div><!-- /.container-fluid -->
     </section>
     <!-- /.content -->
@@ -339,7 +302,6 @@ session_start();
   <!-- /.control-sidebar -->
 </div>
 <!-- ./wrapper -->
-
 <!-- jQuery -->
 <script src="plugins/jquery/jquery.min.js"></script>
 <!-- jQuery UI 1.11.4 -->
@@ -370,6 +332,7 @@ session_start();
 <script src="plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
 <!-- AdminLTE App -->
 <script src="dist/js/adminlte.js"></script>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 <!-- AdminLTE for demo purposes -->
 <!-- <script src="dist/js/demo.js"></script> -->
 <!-- AdminLTE dashboard demo (This is only for demo purposes) -->
