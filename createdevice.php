@@ -1,30 +1,19 @@
-<?php 
-include 'koneksi/koneksi.php'; 
-session_start();
- 
+<?php
+include('koneksi/koneksi.php');
 if (isset($_POST['submit'])) {
     $seri_devices = $_POST['seri_devices'];
-    $nama_devices = $_POST['nama_devices'];
- 
-        $sql = "SELECT * FROM devices WHERE nama_devices='$nama_device'";
-        $result = mysqli_query($conn, $sql);
-        if (!$result->num_rows > 0) {
-            $sql = "INSERT INTO devices (seri_devices, nama_devices)
-                    VALUES ('$seri_devices', '$nama_devices')";
-            $result = mysqli_query($conn, $sql);
-            if ($result) {
-                echo "<script>alert('Selamat, Tambah Data Berhasil!')</script>";
-                $seri_devices = "";
-                $nama_devices = "";
-                header("Location:devicelist.php?notif=tambahberhasil");
-            } else {
-                echo "<script>alert('Woops! Terjadi kesalahan.')</script>";
-            }
-        } else {
-            echo "<script>alert('Woops! Email Sudah Terdaftar.')</script>";
-        }
+    $nama_devices=$_POST['nama_devices'];
+
+    if(empty($seri_devices)){
+    header("Location:devicelist.php?notif=tambahkosong");
+    }elseif(empty($nama_devices)){
+    header("Location:devicelist.php?notif=tambahkosong");
+    }else{
+    $sql = "INSERT INTO devices (seri_devices, nama_devices)VALUES ('$seri_devices', '$nama_devices')";
+    mysqli_query($conn,$sql);
+    header("Location:devicelist.php?notif=tambahberhasil");
+    }
 }
- 
 ?>
 <!DOCTYPE html>
 <html lang="en">

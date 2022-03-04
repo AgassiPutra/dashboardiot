@@ -161,6 +161,10 @@ session_start();
                         <div class="alert alert-danger" role="alert">
                         Maaf data wajib di isi</div>
                     <?php }?>
+                    <?php if($_GET['notif']=="tambahkosong"){?>
+                        <div class="alert alert-danger" role="alert">
+                        Maaf data wajib di isi</div>
+                    <?php }?>
                     <?php }?>
               </div>
               <div class="card-body">

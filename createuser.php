@@ -1,32 +1,21 @@
-<?php 
-include 'koneksi/koneksi.php'; 
-session_start();
- 
+<?php
+include('koneksi/koneksi.php');
 if (isset($_POST['submit'])) {
     $username = $_POST['username'];
-    $email = $_POST['email'];
+    $email=$_POST['email'];
     $password = md5($_POST['password']);
- 
-        $sql = "SELECT * FROM user WHERE email='$email'";
-        $result = mysqli_query($conn, $sql);
-        if (!$result->num_rows > 0) {
-            $sql = "INSERT INTO user (username, email, password)
-                    VALUES ('$username', '$email', '$password')";
-            $result = mysqli_query($conn, $sql);
-            if ($result) {
-                echo "<script>alert('Selamat, Tambah Data Berhasil!')</script>";
-                $username = "";
-                $email = "";
-                $_POST['password'] = "";
-                header("Location:datauser.php?notif=tambahberhasil");
-            } else {
-                echo "<script>alert('Woops! Terjadi kesalahan.')</script>";
-            }
-        } else {
-            echo "<script>alert('Woops! Email Sudah Terdaftar.')</script>";
-        }
+
+    if(empty($username && $password)){
+    header("Location:datauser.php?notif=tambahkosong");
+    }elseif(empty($email)){
+    header("Location:datauser.php?notif=tambahkosong");
+    }else{
+    $sql = "INSERT INTO user (username, email, password)
+        VALUES ('$username', '$email', '$password')";
+    mysqli_query($conn,$sql);
+    header("Location:datauser.php?notif=tambahberhasil");
+    }
 }
- 
 ?>
 <!DOCTYPE html>
 <html lang="en">
