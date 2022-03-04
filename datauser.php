@@ -156,6 +156,12 @@ session_start();
                   Data Berhasil Dihapus</div>
                   <?php }?>
                   <?php }?>
+                  <?php if(!empty($_GET['notif'])){?>
+                    <?php if($_GET['notif']=="editkosong"){?>
+                        <div class="alert alert-danger" role="alert">
+                        Maaf data wajib di isi</div>
+                    <?php }?>
+                    <?php }?>
               </div>
               <div class="card-body">
               <table class="table">
