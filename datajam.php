@@ -5,7 +5,7 @@ session_start();
     if($_GET['aksi']=='hapus'){
     $id_user = $_GET['data'];
     //hapus kategori buku
-    $sql_dh = "delete from `user` where `id` = '$id'";
+    $sql_dh = "delete from `devices` where `id` = '$id'";
     mysqli_query($conn,$sql_dh);
     }
   }
@@ -24,7 +24,7 @@ session_start();
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Dashboard Pet Feeder | Data User</title>
+  <title>Dashboard Pet Feeder | Device List</title>
 
   <!-- Google Font: Source Sans Pro -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
@@ -72,16 +72,16 @@ session_start();
               </p>
             </a>
           </li>
-          <li class="nav-item">
-            <a href="devicelist.php" class="nav-link">
+          <li class="nav-item menu-open">
+            <a href="devicelist.php" class="nav-link active">
               <i class="nav-icon fas fa-table"></i>
               <p>
                 Data Devices
               </p>
             </a>
           </li>
-          <li class="nav-item menu-open">
-            <a href="datauser.php" class="nav-link active">
+          <li class="nav-item">
+            <a href="datauser.php" class="nav-link">
               <i class="nav-icon fas fa-user"></i>
               <p>
                 User
@@ -126,12 +126,12 @@ session_start();
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Data User</h1>
+            <h1>Data Jam</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="index.php">Home</a></li>
-              <li class="breadcrumb-item active">Data User</li>
+              <li class="breadcrumb-item active">Data Jam</li>
             </ol>
           </div>
         </div>
@@ -145,9 +145,9 @@ session_start();
           <div class="col-12">
             <div class="card">
             <div class="card-header">
-                <h3 class="card-title" style="margin-top:5px;">Data User</h3>
+                <h3 class="card-title" style="margin-top:5px;">Data Jam</h3>
                 <div class="card-tools">
-                  <a href="createuser.php" class="btn btn-sm btn-info float-right"><i class="fas fa-plus"></i> Tambah User</a>
+                  <a href="createdevice.php" class="btn btn-sm btn-info float-right"><i class="fas fa-plus"></i> Tambah Data</a>
                 </div>
               </div>
               <!-- /.card-header -->
@@ -156,7 +156,7 @@ session_start();
                   <?php if($_GET['notif']=="tambahberhasil"){?>
                   <div class="alert alert-success" role="alert">
                   Data Berhasil Ditambahkan</div>
-                  <?php } else if($_GET['notif']=="editberhasil"){?>
+                  <?php } else if($_GET['notif']=="updateberhasil"){?>
                   <div class="alert alert-success" role="alert">
                   Data Berhasil Diubah</div>
                   <?php } else if($_GET['notif']=="hapusberhasil"){?>
@@ -180,8 +180,8 @@ session_start();
                 <thead>
                   <tr>
                     <th scope="col">No</th>
-                    <th scope="col">Nama User</th>
-                    <th scope="col">Email</th>
+                    <th scope="col">Jam</th>
+                    <th scope="col">Status</th>
                     <th scope="col">Action</th>
                   </tr>
                 </thead>
@@ -195,26 +195,25 @@ session_start();
                       $halaman = $_GET['halaman'];
                       $posisi = ($halaman-1) * $batas;
                     }
-                      $sql_k = "SELECT `id`,`username`,`email` FROM `user`";
+                      $sql_k = "SELECT `id`,`jam`,`status` FROM `waktu_feeder`";
                       if (!empty($katakunci_kategori)){
-                        $sql_k .= " where `email` LIKE '%$katakunci_kategori%' ";
+                        $sql_k .= " where `jam` LIKE '%$katakunci_kategori%' ";
                       }
                       $sql_k .= " ORDER BY `id` limit $posisi, $batas ";
                       $query_k = mysqli_query($conn,$sql_k);
                       $no = $posisi+1;
                       while($data_k = mysqli_fetch_row($query_k)){
                       $id = $data_k[0];
-                      $username = $data_k[1];
-                      $email = $data_k[2];
+                      $jam = $data_k[1];
+                      $status = $data_k[2];
                     ?>
                   <tr>
                     <td><?php echo $no;?></td>
-                    <td><?php echo $username?></td>
-                    <td><?php echo $email?></td>
+                    <td><?php echo $jam?></td>
+                    <td><?php echo $status?></td>
                     <td>
-                      <a href="edituser.php?id=<?php echo $id;?>" class="btn btn-xs btn-info" title="Edit"><i class="fas fa-edit"></i></a>
-                      <a href="read_user.php?id=<?php echo $id;?>" class="btn btn-xs btn-info" title="Detail"><i class="fas fa-eye"></i></a>
-                      <a href="hapususer.php?id=<?php echo $id; ?>"class="btn btn-xs btn-warning"><i class="fas fa-trash"></i></a>                     
+                      <a href="editjam.php?id=<?php echo $id;?>" class="btn btn-xs btn-info" title="Edit"><i class="fas fa-edit"></i></a>
+                      <a href="hapusjam.php?id=<?php echo $id; ?>"class="btn btn-xs btn-warning"><i class="fas fa-trash"></i></a>                     
                      </td>
                   </tr>
                   <?php $no++;}?>
@@ -223,9 +222,9 @@ session_start();
               </div>
               <?php
               //hitung jumlah semua data
-              $sql_jum = "SELECT `id`,`username`,`email` FROM `user`";
+              $sql_jum = "SELECT `id`,`jam`,`status` FROM `waktu_feeder`";
               if (!empty($katakunci_kategori)){
-                $sql_jum .= " where `username` LIKE '%$katakunci_kategori%'";
+                $sql_jum .= " where `jam` LIKE '%$katakunci_kategori%'";
               }
               $sql_jum .= " order by `id`";
               $query_jum = mysqli_query($conn,$sql_jum);

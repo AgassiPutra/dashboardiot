@@ -81,6 +81,14 @@ session_start();
             </a>
           </li>
           <li class="nav-item">
+            <a href="datajam.php" class="nav-link">
+              <i class="nav-icon fas fa-clock"></i>
+              <p>
+                Data Jam
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
             <a href="logout.php" class="nav-link">
               <i class="fas fa-sign-out-alt"></i>
               <p>
