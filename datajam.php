@@ -36,6 +36,15 @@ session_start();
   <link rel="stylesheet" href="plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="dist/css/adminlte.min.css">
+
+  <script type="text/javascript">
+    $(document).ready(function(){
+      setInterval(function(){
+        $("#datajam").load('cek_jam.php');
+      }, 1000);
+    });
+  </script>
+
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
@@ -73,7 +82,7 @@ session_start();
             </a>
           </li>
           <li class="nav-item menu-open">
-            <a href="devicelist.php" class="nav-link active">
+            <a href="devicelist.php" class="nav-link">
               <i class="nav-icon fas fa-table"></i>
               <p>
                 Data Devices
@@ -97,7 +106,7 @@ session_start();
             </a>
           </li>
           <li class="nav-item">
-            <a href="datajam.php" class="nav-link">
+            <a href="datajam.php" class="nav-link active">
               <i class="nav-icon fas fa-clock"></i>
               <p>
                 Data Jam
@@ -145,7 +154,7 @@ session_start();
           <div class="col-12">
             <div class="card">
             <div class="card-header">
-                <h3 class="card-title" style="margin-top:5px;">Data Jam</h3>
+                <h3 class="card-title" style="margin-top:5px;">Jam Sekarang : <?php include 'cek_jam.php';?></h3>
                 <div class="card-tools">
                   <a href="createjam.php" class="btn btn-sm btn-info float-right"><i class="fas fa-plus"></i> Tambah Data</a>
                 </div>
