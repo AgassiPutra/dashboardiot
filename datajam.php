@@ -147,7 +147,7 @@ session_start();
             <div class="card-header">
                 <h3 class="card-title" style="margin-top:5px;">Data Jam</h3>
                 <div class="card-tools">
-                  <a href="createdevice.php" class="btn btn-sm btn-info float-right"><i class="fas fa-plus"></i> Tambah Data</a>
+                  <a href="createjam.php" class="btn btn-sm btn-info float-right"><i class="fas fa-plus"></i> Tambah Data</a>
                 </div>
               </div>
               <!-- /.card-header -->
