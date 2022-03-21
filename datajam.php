@@ -36,11 +36,10 @@ session_start();
   <link rel="stylesheet" href="plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="dist/css/adminlte.min.css">
-
   <script type="text/javascript">
     $(document).ready(function(){
       setInterval(function(){
-        $("#datajam").load('cek_jam.php');
+        $("#datajam").load('cekjam.php');
       }, 1000);
     });
   </script>
@@ -154,7 +153,7 @@ session_start();
           <div class="col-12">
             <div class="card">
             <div class="card-header">
-                <h3 class="card-title" style="margin-top:5px;">Jam Sekarang : <?php include 'cek_jam.php';?></h3>
+                <h3 class="card-title" style="margin-top:5px;">Jam Sekarang : <div id="datajam"></div></h3>
                 <div class="card-tools">
                   <a href="createjam.php" class="btn btn-sm btn-info float-right"><i class="fas fa-plus"></i> Tambah Data</a>
                 </div>

@@ -5,12 +5,12 @@ include "koneksi/koneksi.php";
     $jam = date('H:i:s');
     echo $jam;
 
-    $sql = mysqli_query($conn,"SELECT * FROM waktu_feeder order by id asc");
+    $sql = mysqli_query($conn,"select * from waktu_feeder");
     while($data = mysqli_fetch_array($sql)){
         $id = $data['id'];
-        $jamdb =  $data['jam'];
+        $jamdb = $data['jam'];
         if($jam == $jamdb){
-            mysqli_query($conn,"UPDATE waktu_feeder SET status=1 WHERE id='$id' ");
+            mysqli_query($conn,"update waktu_feeder set status=1 where id='$id'");
         }
     }
 ?>  
