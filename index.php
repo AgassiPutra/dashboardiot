@@ -207,7 +207,7 @@ $suhu = mysqli_fetch_array($sql2);
             <!-- small box -->
             <div class="small-box bg-success">
               <div class="inner">
-                <div class="row pl-2"><h3><i class="fas fa-thermometer-three-quarters"></i></h3><span class="pl-2 pt-2"><?php echo $suhu['1'];?>&deg;C</span></div>
+                <div class="row pl-2"><h3><i class="fas fa-thermometer-three-quarters"></i></h3><span class="pl-2 pt-2"><?php echo $suhu['2'];?>&deg;C</span></div>
                 <p>Temperature</p>
               </div>
               <div class="icon">
@@ -220,7 +220,7 @@ $suhu = mysqli_fetch_array($sql2);
             <!-- small box -->
             <div class="small-box bg-warning">
               <div class="inner">
-              <div class="row pl-2"><h3><i class="fas fa-tint"></i></h3><span class="pl-2 pt-2"><?php echo $suhu['2'];?>%</span></div>
+              <div class="row pl-2"><h3><i class="fas fa-tint"></i></h3><span class="pl-2 pt-2"><?php echo $suhu['3'];?>%</span></div>
                 <p>Humidity</p>
               </div>
               <div class="icon">
