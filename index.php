@@ -140,6 +140,14 @@ $suhu = mysqli_fetch_array($sql2);
             </a>
           </li>
           <li class="nav-item">
+            <a href="dataesp32.php" class="nav-link">
+              <i class="nav-icon fas fa-microchip"></i>
+              <p>
+                Data ESP32
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
             <a href="logout.php" class="nav-link">
               <i class="fas fa-sign-out-alt"></i>
               <p>

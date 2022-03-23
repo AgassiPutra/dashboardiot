@@ -18,28 +18,28 @@
             <div class="row">
                 <div class="col-md-12">
                     <div class="page-header">
-                        <h2>Update Data Jam</h2>
+                        <h2>Update Data ESP32</h2>
                     </div>
                     <?php 
                     include "koneksi/koneksi.php";
                     $id = $_GET['id'];
-                    $sql_c = "SELECT `id_device`,`jam`, `status` FROM `waktu_feeder` WHERE `id`='$id'";
+                    $sql_c = "SELECT `id_device`, `nama_device` FROM `esp32` WHERE `id_device`='$id'";
                     $nomor = 1;
                     $query_c = mysqli_query($conn,$sql_c);
                     while($data = mysqli_fetch_array($query_c)){
                     ?>
-                    <form action="konfirmasiupdatejam.php" method="POST">
+                    <form action="konfirmasiupdateesp.php" method="POST">
                         <div class="form-group">
-                            <label>ID Device</label>
+                            <label>ID</label>
                             <input type="text" name="id_device" class="form-control" value="<?php echo $data['id_device']; ?>">
                         </div>
                         <div class="form-group">
-                            <label>Jam</label>
-                            <input type="text" name="jam" class="form-control" value="<?php echo $data['jam']; ?>">
+                            <label>Nama Device</label>
+                            <input type="text" name="nama_device" class="form-control" value="<?php echo $data['nama_device']; ?>">
                         </div>
-                        <input type="hidden" name="id" value="<?php echo $id; ?>"/>
+                        <input type="hidden" name="id_device" value="<?php echo $id; ?>"/>
                         <input type="submit" class="btn btn-primary" value="Submit">
-                        <a href="datajam.php" class="btn btn-default">Cancel</a>
+                        <a href="dataesp32.php" class="btn btn-default">Cancel</a>
                     </form>
                     <?php } ?>
                 </div>

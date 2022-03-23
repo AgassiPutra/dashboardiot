@@ -89,6 +89,14 @@ session_start();
             </a>
           </li>
           <li class="nav-item">
+            <a href="dataesp32.php" class="nav-link">
+              <i class="nav-icon fas fa-microchip"></i>
+              <p>
+                Data ESP32
+              </p>
+            </a>
+          </li>
+          <li class="nav-item">
             <a href="logout.php" class="nav-link">
               <i class="fas fa-sign-out-alt"></i>
               <p>
@@ -140,6 +148,7 @@ session_start();
                 <thead>
                   <tr>
                     <th scope="col">No</th>
+                    <th scope="col">Id Device</th>
                     <th scope="col">Suhu Temperatur &deg;</th>
                     <th scope="col">Kelembaban</th>
                     <th scope="col">Tanggal</th>
@@ -164,12 +173,14 @@ session_start();
                       $no = $posisi+1;
                       while($data_k = mysqli_fetch_row($query_k)){
                       $id = $data_k[0];
-                      $temperatur = $data_k[1];
-                      $humidity = $data_k[2];
-                      $tanggal = $data_k[3];
+                      $id_device = $data_k[1];
+                      $temperatur = $data_k[2];
+                      $humidity = $data_k[3];
+                      $tanggal = $data_k[4];
                     ?>
                   <tr>
                     <td><?php echo $no;?></td>
+                    <td><?php echo $id_device?></td>
                     <td><?php echo $temperatur?></td>
                     <td><?php echo $humidity?></td>
                     <td><?php echo $tanggal?></td>
@@ -180,7 +191,7 @@ session_start();
               </div>
               <?php
               //hitung jumlah semua data
-              $sql_jum = "SELECT `id`,`temperatur`,`humidity`,`tanggal` FROM `sensor_suhu`";
+              $sql_jum = "SELECT `id`,`id_device`,`temperatur`,`humidity`,`tanggal` FROM `sensor_suhu`";
               if (!empty($katakunci_kategori)){
                 $sql_jum .= " where `tanggal` LIKE '%$katakunci_kategori%'";
               }

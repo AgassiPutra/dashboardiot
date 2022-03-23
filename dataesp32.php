@@ -82,7 +82,7 @@ session_start();
               </p>
             </a>
           </li>
-          <li class="nav-item menu-open">
+          <li class="nav-item">
             <a href="devicelist.php" class="nav-link">
               <i class="nav-icon fas fa-table"></i>
               <p>
@@ -107,7 +107,7 @@ session_start();
             </a>
           </li>
           <li class="nav-item">
-            <a href="datajam.php" class="nav-link active">
+            <a href="datajam.php" class="nav-link">
               <i class="nav-icon fas fa-clock"></i>
               <p>
                 Data Jam
@@ -115,7 +115,7 @@ session_start();
             </a>
           </li>
           <li class="nav-item">
-            <a href="dataesp32.php" class="nav-link">
+            <a href="dataesp32.php" class="nav-link active">
               <i class="nav-icon fas fa-microchip"></i>
               <p>
                 Data ESP32
@@ -144,12 +144,12 @@ session_start();
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1>Data Jam</h1>
+            <h1>Data ESP32</h1>
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
               <li class="breadcrumb-item"><a href="index.php">Home</a></li>
-              <li class="breadcrumb-item active">Data Jam</li>
+              <li class="breadcrumb-item active">Data ESP32</li>
             </ol>
           </div>
         </div>
@@ -163,9 +163,9 @@ session_start();
           <div class="col-12">
             <div class="card">
             <div class="card-header">
-                <h3 class="card-title" style="margin-top:5px;">Jam Sekarang : <div id="datajam"></div></h3>
+                <h3 class="card-title" style="margin-top:5px;">Data ESP32</h3>
                 <div class="card-tools">
-                  <a href="createjam.php" class="btn btn-sm btn-info float-right"><i class="fas fa-plus"></i> Tambah Data</a>
+                  <a href="createesp.php" class="btn btn-sm btn-info float-right"><i class="fas fa-plus"></i> Tambah Data</a>
                 </div>
               </div>
               <!-- /.card-header -->
@@ -199,8 +199,7 @@ session_start();
                   <tr>
                     <th scope="col">No</th>
                     <th scope="col">Id Device</th>
-                    <th scope="col">Jam</th>
-                    <th scope="col">Status</th>
+                    <th scope="col">Nama Device</th>
                     <th scope="col">Action</th>
                   </tr>
                 </thead>
@@ -214,27 +213,24 @@ session_start();
                       $halaman = $_GET['halaman'];
                       $posisi = ($halaman-1) * $batas;
                     }
-                      $sql_k = "SELECT `id`,`id_device`,`jam`,`status` FROM `waktu_feeder`";
+                      $sql_k = "SELECT `id_device`,`nama_device` FROM `esp32`";
                       if (!empty($katakunci_kategori)){
-                        $sql_k .= " where `jam` LIKE '%$katakunci_kategori%' ";
+                        $sql_k .= " where `nama_device` LIKE '%$katakunci_kategori%' ";
                       }
-                      $sql_k .= " ORDER BY `id` limit $posisi, $batas ";
+                      $sql_k .= " ORDER BY `id_device` limit $posisi, $batas ";
                       $query_k = mysqli_query($conn,$sql_k);
                       $no = $posisi+1;
                       while($data_k = mysqli_fetch_row($query_k)){
-                      $id = $data_k[0];
-                      $id_device = $data_k[1];
-                      $jam = $data_k[2];
-                      $status = $data_k[3];
+                      $id_device = $data_k[0];
+                      $nama_device = $data_k[1];
                     ?>
                   <tr>
                     <td><?php echo $no;?></td>
                     <td><?php echo $id_device?></td>
-                    <td><?php echo $jam?></td>
-                    <td><?php echo $status?></td>
+                    <td><?php echo $nama_device?></td>
                     <td>
-                      <a href="editjam.php?id=<?php echo $id;?>" class="btn btn-xs btn-info" title="Edit"><i class="fas fa-edit"></i></a>
-                      <a href="hapusjam.php?id=<?php echo $id; ?>"class="btn btn-xs btn-warning"><i class="fas fa-trash"></i></a>                     
+                      <a href="editesp.php?id=<?php echo $id_device;?>" class="btn btn-xs btn-info" title="Edit"><i class="fas fa-edit"></i></a>
+                      <a href="hapusesp.php?id=<?php echo $id_device; ?>"class="btn btn-xs btn-warning"><i class="fas fa-trash"></i></a>                     
                      </td>
                   </tr>
                   <?php $no++;}?>
@@ -243,11 +239,11 @@ session_start();
               </div>
               <?php
               //hitung jumlah semua data
-              $sql_jum = "SELECT `id`,`jam`,`status` FROM `waktu_feeder`";
+              $sql_jum = "SELECT `id_device`,`nama_device` FROM `esp32`";
               if (!empty($katakunci_kategori)){
-                $sql_jum .= " where `jam` LIKE '%$katakunci_kategori%'";
+                $sql_jum .= " where `nama_device` LIKE '%$katakunci_kategori%'";
               }
-              $sql_jum .= " order by `id`";
+              $sql_jum .= " order by `id_device`";
               $query_jum = mysqli_query($conn,$sql_jum);
               $jum_data = mysqli_num_rows($query_jum);
               $jum_halaman = ceil($jum_data/$batas);
