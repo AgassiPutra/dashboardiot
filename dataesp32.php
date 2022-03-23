@@ -230,7 +230,7 @@ session_start();
                     <td><?php echo $nama_device?></td>
                     <td>
                       <a href="editesp.php?id=<?php echo $id_device;?>" class="btn btn-xs btn-info" title="Edit"><i class="fas fa-edit"></i></a>
-                      <a href="hapusesp.php?id=<?php echo $id_device; ?>"class="btn btn-xs btn-warning"><i class="fas fa-trash"></i></a>                     
+                      <a href="hapusesp.php?id_device=<?php echo $id_device; ?>"class="btn btn-xs btn-warning"><i class="fas fa-trash"></i></a>                     
                      </td>
                   </tr>
                   <?php $no++;}?>
