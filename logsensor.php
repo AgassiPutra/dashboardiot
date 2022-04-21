@@ -7,7 +7,7 @@ session_start();
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="refresh" content="5" >
+  <!-- <meta http-equiv="refresh" content="5"  -->
   <title>Dashboard Pet Feeder | Log Suhu</title>
 
   <!-- Google Font: Source Sans Pro -->
@@ -20,6 +20,29 @@ session_start();
   <link rel="stylesheet" href="plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
   <!-- Theme style -->
   <link rel="stylesheet" href="dist/css/adminlte.min.css">
+  <!-- jQuery -->
+  <script src="plugins/jquery/jquery.min.js"></script>
+  <!-- Bootstrap 4 -->
+  <script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <!-- DataTables  & Plugins -->
+  <script src="plugins/datatables/jquery.dataTables.min.js"></script>
+  <script src="plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
+  <script src="plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
+  <script src="plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
+  <script src="plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
+  <script src="plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
+  <script src="plugins/jszip/jszip.min.js"></script>
+  <script src="plugins/pdfmake/pdfmake.min.js"></script>
+  <script src="plugins/pdfmake/vfs_fonts.js"></script>
+  <script src="plugins/datatables-buttons/js/buttons.html5.min.js"></script>
+  <script src="plugins/datatables-buttons/js/buttons.print.min.js"></script>
+  <script src="plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
+  <!-- AdminLTE App -->
+  <script src="dist/js/adminlte.min.js"></script>
+  <!-- jQuery UI CSS -->
+  <link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/smoothness/jquery-ui.css">
+  <!-- jQuery UI JS -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 </head>
 <body class="hold-transition sidebar-mini">
 <div class="wrapper">
@@ -136,12 +159,14 @@ session_start();
         <div class="row">
           <div class="col-12">
             <div class="card">
-            <div class="card-header">
-                <h3 class="card-title" style="margin-top:5px;">Log Sensor</h3>
-                <div class="card-tools">
-                  <a href="export_excel.php" class="btn btn-sm btn-info float-right"> Export ke Excel</a>
-                </div>
-              </div>
+            <form method='post' action='export_excel.php'>
+            <!-- Datepicker -->
+            <input type='text' class='datepicker' placeholder="From date" name="from_date" id='from_date' readonly>
+            <input type='text' class='datepicker' placeholder="To date" name="to_date" id='to_date' readonly>
+
+            <!-- Export button -->
+            <input type='submit' value='Export' name='Export'>
+            </form> 
               <!-- /.card-header -->
               <div class="card-body">
               <table class="table">
@@ -253,26 +278,6 @@ session_start();
   <!-- /.control-sidebar -->
 </div>
 <!-- ./wrapper -->
-
-<!-- jQuery -->
-<script src="plugins/jquery/jquery.min.js"></script>
-<!-- Bootstrap 4 -->
-<script src="plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-<!-- DataTables  & Plugins -->
-<script src="plugins/datatables/jquery.dataTables.min.js"></script>
-<script src="plugins/datatables-bs4/js/dataTables.bootstrap4.min.js"></script>
-<script src="plugins/datatables-responsive/js/dataTables.responsive.min.js"></script>
-<script src="plugins/datatables-responsive/js/responsive.bootstrap4.min.js"></script>
-<script src="plugins/datatables-buttons/js/dataTables.buttons.min.js"></script>
-<script src="plugins/datatables-buttons/js/buttons.bootstrap4.min.js"></script>
-<script src="plugins/jszip/jszip.min.js"></script>
-<script src="plugins/pdfmake/pdfmake.min.js"></script>
-<script src="plugins/pdfmake/vfs_fonts.js"></script>
-<script src="plugins/datatables-buttons/js/buttons.html5.min.js"></script>
-<script src="plugins/datatables-buttons/js/buttons.print.min.js"></script>
-<script src="plugins/datatables-buttons/js/buttons.colVis.min.js"></script>
-<!-- AdminLTE App -->
-<script src="dist/js/adminlte.min.js"></script>
 <!-- Page specific script -->
 <script>
   $(function () {
@@ -290,6 +295,32 @@ session_start();
       "responsive": true,
     });
   });
+</script>
+<script type="text/javascript">
+  $(document).ready(function(){
+
+// From datepicker
+$("#from_date").datepicker({ 
+   dateFormat: 'yy-mm-dd',
+   changeYear: true,
+   onSelect: function (selected) {
+      var dt = new Date(selected);
+      dt.setDate(dt.getDate() + 1);
+      $("#to_date").datepicker("option", "minDate", dt);
+   }
+});
+
+  // To datepicker
+  $("#to_date").datepicker({
+    dateFormat: 'yy-mm-dd',
+    changeYear: true,
+    onSelect: function (selected) {
+        var dt = new Date(selected);
+        dt.setDate(dt.getDate() - 1);
+        $("#from_date").datepicker("option", "maxDate", dt);
+    }
+  });
+});
 </script>
 </body>
 </html>

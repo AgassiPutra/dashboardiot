@@ -1,60 +1,47 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Export Log Sensor - Excel</title>
-</head>
-<body>
-	<style type="text/css">
-	body{
-		font-family: sans-serif;
-	}
-	table{
-		margin: 20px auto;
-		border-collapse: collapse;
-	}
-	table th,
-	table td{
-		border: 1px solid #3c3c3c;
-		padding: 3px 8px;
+<?php
+include "koneksi/koneksi.php";
+$filename = 'datasuhu_'.time().'.csv';
 
-	}
-	a{
-		background: blue;
-		color: #fff;
-		padding: 8px 10px;
-		text-decoration: none;
-		border-radius: 2px;
-	}
-	</style>
+// POST values
+$from_date = $_POST['from_date'];
+$to_date = $_POST['to_date'];
 
-	<?php
-	header("Content-type: application/vnd-ms-excel");
-	header("Content-Disposition: attachment; filename=Data Sensor.xls");
-	?>
+// Select query
+$query = "SELECT * FROM sensor_suhu ORDER BY id asc";
 
-	<table border="1">
-		<tr>
-			<th>No</th>
-			<th>Temperatur</th>
-			<th>Humidity</th>
-			<th>Tanggal</th>
-		</tr>
-		<?php 
-        include "koneksi/koneksi.php";
-		// menampilkan data pegawai
-		$data = mysqli_query($conn,"select * from sensor_suhu");
-		$no = 1;
-		while($d = mysqli_fetch_array($data)){
-		?>
-		<tr>
-			<td><?php echo $no++; ?></td>
-			<td><?php echo $d['temperatur']; ?></td>
-			<td><?php echo $d['humidity']; ?></td>
-			<td><?php echo $d['tanggal']; ?></td>
-		</tr>
-		<?php 
-		}
-		?>
-	</table>
-</body>
-</html>
+if(isset($_POST['from_date']) && isset($_POST['to_date'])){
+   $query = "SELECT * FROM sensor_suhu where tanggal between '".$from_date."' and '".$to_date."' ORDER BY id asc";
+}
+
+$result = mysqli_query($conn,$query);
+$suhu = array();
+
+// file creation
+$file = fopen($filename,"w");
+
+// Header row - Remove this code if you don't want a header row in the export file.
+$suhu = array("No","Temperatur","Humidity","Tanggal"); 
+fputcsv($file,$suhu);  
+while($row = mysqli_fetch_assoc($result)){
+   $id = $row['id'];
+   $temperatur = $row['temperatur'];
+   $humidity = $row['humidity'];
+   $tanggal = $row['tanggal'];
+
+   // Write to file 
+   $suhu = array($id,$temperatur,$humidity,$tanggal);
+   fputcsv($file,$suhu); 
+}
+
+fclose($file);
+
+// download
+header("Content-Description: File Transfer");
+header("Content-Disposition: attachment; filename=$filename");
+header("Content-Type: application/vnd-ms-excel; ");
+
+readfile($filename);
+
+// deleting file
+unlink($filename);
+exit();
