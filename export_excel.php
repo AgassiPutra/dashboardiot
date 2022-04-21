@@ -20,7 +20,7 @@ $suhu = array();
 $file = fopen($filename,"w");
 
 // Header row - Remove this code if you don't want a header row in the export file.
-$suhu = array("No","ID","Temperatur","Humidity","Tanggal"); 
+$suhu = array("No","ID_Devices","Temperatur","Humidity","Tanggal"); 
 fputcsv($file,$suhu);  
 while($row = mysqli_fetch_assoc($result)){
    fputcsv($file,$row);
