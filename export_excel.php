@@ -38,3 +38,4 @@ readfile($filename);
 // deleting file
 unlink($filename);
 exit();
+?>
